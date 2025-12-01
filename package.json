@@ -4,6 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
+    "solve": "tsx main.ts",
     "test": "vitest run"
   },
   "keywords": [],
@@ -11,6 +12,8 @@
   "license": "MIT",
   "type": "module",
   "devDependencies": {
+    "@types/node": "^24.10.1",
+    "tsx": "^4.21.0",
     "typescript": "^5.9.3",
     "vitest": "^4.0.14"
   }
