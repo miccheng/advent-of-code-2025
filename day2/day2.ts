@@ -1,7 +1,7 @@
-export const solutionPart1 = (idRanges: string): { invalidIds: number[], sum: number } => {
+export const solutionPart1 = (input: string): { invalidIds: number[], sum: number } => {
     const invalidIds: number[] = [];
     let sum = 0
-    idRanges.trim().split(',').map(range => {
+    input.trim().split(',').map(range => {
         const [start, end] = range.split('-').map(Number);
         for (let id = start; id <= end; id++) {
             if (id && isEqualPalindrome(id)) {
@@ -21,10 +21,10 @@ export const isEqualPalindrome = (num: number): boolean => {
     )
 }
 
-export const solutionPart2 = (idRanges: string): { invalidIds: number[], sum: number } => {
+export const solutionPart2 = (input: string): { invalidIds: number[], sum: number } => {
     const invalidIds: number[] = [];
     let sum = 0
-    idRanges.trim().split(',').map(range => {
+    input.trim().split(',').map(range => {
         const [start, end] = range.split('-').map(Number);
         for (let id = start; id <= end; id++) {
             if (id && isRepeatingSequence(id)) {
