@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "solve": "tsx main.ts",
+    "solve": "tsx src/main.ts",
     "test": "vitest run"
   },
   "keywords": [],
