@@ -1,4 +1,5 @@
-export const solution = (steps:string[]) => {
+export const solution = (input:string) => {
+    const steps = input.trim().split('\n')
     let startingPosition = 50
     const result = { dialPosition: startingPosition, password: 0, '0x434C49434B': 0 }
 
