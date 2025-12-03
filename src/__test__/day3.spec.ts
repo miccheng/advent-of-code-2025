@@ -13,5 +13,6 @@ describe('largestPossibleJolatage', () => {
         expect(largestPossibleJolatage('811111111111119')).toEqual(89)
         expect(largestPossibleJolatage('234234234234278')).toEqual(78)
         expect(largestPossibleJolatage('818181911112111')).toEqual(92)
+        expect(largestPossibleJolatage('891111111111111')).toEqual(91)
     })
 })

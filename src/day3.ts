@@ -8,12 +8,12 @@ export const largestPossibleJolatage = (input: string): number => {
     const candidates = input.split('')
     const result: { left: number, right: number } = {left: -1, right: -1}
 
-    const firstTwo = candidates.slice(0, 2)
-    result.left = parseInt(firstTwo[0])
-    result.right = parseInt(firstTwo[1])
+    // Only first char LHS
+    result.left = parseInt(candidates[0])
 
-    for(let i = 2; i < candidates.length; i++) {
-        // console.log('checking', candidates[i], 'against', result)
+    // Check from 2nd char onwards
+    for(let i = 1; i < candidates.length; i++) {
+        console.log('checking', candidates[i], 'against', result)
 
         const checkValue = parseInt(candidates[i])
         
@@ -27,6 +27,8 @@ export const largestPossibleJolatage = (input: string): number => {
                 // If this is the last char, make it the RHS value
                 result.right = checkValue
             }
+        } else if (result.right < 0) { // Populate RHS if its not set
+            result.right = checkValue
         } else if (checkValue > result.right) {
             result.right = checkValue
         }
