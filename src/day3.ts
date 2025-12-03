@@ -48,72 +48,20 @@ export const largest12CellJoltage = (input: string): number => {
     // Exactly 12 chars
     if (input.length === 12) return parseInt(input)
 
-    let lhs = ''
+    let output = ''
     let candidateString = input
-    console.log('Starting', candidateString)
+    // console.log('Starting String', candidateString)
     for(let i = 0; i < 12; i++) {
-        let nextHighestBattery = highestCellCount(candidateString, (12-lhs.length))
-        console.log(nextHighestBattery)
+        let nextHighestBattery = highestCellCount(candidateString, (12-output.length))
+        // console.log('Next highest battery position', nextHighestBattery)
+        // console.log('Next', `${output}${candidateString.substring(nextHighestBattery)}`)
 
-        console.log('Next', `${lhs}${candidateString.substring(nextHighestBattery)}`)
-
-        lhs = `${lhs}${candidateString[nextHighestBattery]}`
+        output = `${output}${candidateString[nextHighestBattery]}`
         candidateString = candidateString.substring(nextHighestBattery+1)
-        console.log('LHS', lhs, 'Str', candidateString)
+        // console.log('output', output, 'candidate string', candidateString)
     }
 
-    return parseInt(lhs)
-
-
-    // // Find indexOf highest number
-    // const highestCellPos = highestCellCount(input)
-    // // Set 1st char as highest number
-    // // let lhs = input[highestCellPos]
-
-    // // let candidateString = input.slice(highestCellPos)
-    // console.log('Candidate String', candidateString)
-    // // while(true) {
-    //     console.log('Foo', candidateString.substring(1))
-    //     let pointer = highestCellCount(candidateString.substring(1))
-    //     console.log(pointer)
-    //     console.log('Candidate String', candidateString)
-    //     // if (pointer < 0) break
-    //     console.log(candidateString.substring(1)[pointer])
-
-    //     lhs = `${lhs}${candidateString[pointer]}`
-    //     candidateString = candidateString.substring(pointer)
-
-    //     console.log('Candidate String', candidateString)
-    //     console.log('LHS', lhs)        
-    // // }
-
-    // // console.log('Candidate String', candidateString)
-    // // console.log('LHS', lhs)
-
-    // let highestNumber = parseInt(candidateString.substring(0, 12))
-    // console.log('Highest Number', highestNumber)
-    // // for(let i=1; i < candidateString.length; i++) {
-    // //     const num = `${lhs}${candidateString.slice(i)}`.substring(0, 12)
-    // //     if (num.length < 12) break
-    // //     console.log('LHS', `${lhs}_${candidateString.slice(i)}`.substring(0, 13), 'Checking:', num, 'against', highestNumber)
-
-    // //     if (parseInt(num) > highestNumber) {
-    // //         highestNumber = parseInt(num)
-    // //         console.log('Adding to LHS:', candidateString[i])
-    // //         lhs = `${lhs}${candidateString[i]}`
-    // //     }
-    // // }
-    // // 92222213223325332632323212227323432113121
-    // // 97432113121 x less than 12
-    // // 97323432113121 (14)
-    // // 973_234321131 (12)
-    // // 973_343211312 (12)
-    // // 973_432113121 (12)
-    // // 973432113121
-    // // 973432113121
-
-    // return highestNumber
-    return 0
+    return parseInt(output)
 }
 
 export const highestCellCount = (input: string, minimumLength=12): number => {
