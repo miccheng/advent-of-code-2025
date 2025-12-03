@@ -13,7 +13,7 @@ export const largestPossibleJolatage = (input: string): number => {
 
     // Check from 2nd char onwards
     for(let i = 1; i < candidates.length; i++) {
-        console.log('checking', candidates[i], 'against', result)
+        // console.log('checking', candidates[i], 'against', result)
 
         const checkValue = parseInt(candidates[i])
         
@@ -21,8 +21,7 @@ export const largestPossibleJolatage = (input: string): number => {
             if (i !== (candidates.length-1)) {
                 // New higher value, make this the new LHS and next char is RHS
                 result.left = checkValue
-                result.right = parseInt(candidates[i+1])
-                i++
+                result.right = -1
             } else {
                 // If this is the last char, make it the RHS value
                 result.right = checkValue
