@@ -21,3 +21,7 @@ const inputDay3 = fs.readFileSync(path.join(__dirname, '/inputs/day3.txt'), 'utf
 console.log('Day 3 Solution (Part 1):', day3Part1Solution(inputDay3))
 console.log('Day 3 Solution (Part 2):', day3Part2Solution(inputDay3))
 
+import { solutionPart1 as day4Part1Solution, solutionPart2 as day4Part2Solution } from './day4'
+const inputDay4 = fs.readFileSync(path.join(__dirname, '/inputs/day4.txt'), 'utf-8')
+console.log('Day 4 Solution (Part 1):', day4Part1Solution(inputDay4))
+console.log('Day 4 Solution (Part 2):', day4Part2Solution(inputDay4))
