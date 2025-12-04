@@ -1,10 +1,10 @@
 import { describe, expect, test } from 'vitest'
-import { solutionPart1, solutionPart2, gridParser, getNeighbours } from '../day4'
+import { solutionPart1, solutionPart2, gridParser, getNeighbours, tick } from '../day4'
 
 describe('Day 4 Tests', () => {
     test('Example Inputs', () => {
         expect(solutionPart1("..@@.@@@@.\n@@@.@.@.@@\n@@@@@.@.@@\n@.@@@@..@.\n@@.@@@@.@@\n.@@@@@@@.@\n.@.@.@.@@@\n@.@@@.@@@@\n.@@@@@@@@.\n@.@.@@@.@.")).toEqual(13);
-        expect(solutionPart2("")).toEqual(0);
+        expect(solutionPart2("..@@.@@@@.\n@@@.@.@.@@\n@@@@@.@.@@\n@.@@@@..@.\n@@.@@@@.@@\n.@@@@@@@.@\n.@.@.@.@@@\n@.@@@.@@@@\n.@@@@@@@@.\n@.@.@@@.@.")).toEqual(43);
     })
 
     test('Parser', () => {
@@ -24,5 +24,23 @@ describe('Day 4 Tests', () => {
             { col: 0, row: 0 }, { col: 1, row: 0 },
             { col: 0, row: 1 }
         ])
+    })
+
+    test('tick', () => {
+        const grid = gridParser("..@@.@@@@.\n@@@.@.@.@@\n@@@@@.@.@@\n@.@@@@..@.\n@@.@@@@.@@\n.@@@@@@@.@\n.@.@.@.@@@\n@.@@@.@@@@\n.@@@@@@@@.\n@.@.@@@.@.")
+        const result = tick(grid)
+        expect(result.newGrid).toEqual([
+            ['.', '.', 'x', 'x', '.', 'x', 'x', '@', 'x', '.'],
+            ['x', '@', '@', '.', '@', '.', '@', '.', '@', '@'],
+            ['@', '@', '@', '@', '@', '.', 'x', '.', '@', '@'],
+            ['@', '.', '@', '@', '@', '@', '.', '.', '@', '.'],
+            ['x', '@', '.', '@', '@', '@', '@', '.', '@', 'x'],
+            ['.', '@', '@', '@', '@', '@', '@', '@', '.', '@'],
+            ['.', '@', '.', '@', '.', '@', '.', '@', '@', '@'],
+            ['x', '.', '@', '@', '@', '.', '@', '@', '@', '@'],
+            ['.', '@', '@', '@', '@', '@', '@', '@', '@', '.'],
+            ['x', '.', 'x', '.', '@', '@', '@', '.', 'x', '.'],
+        ])
+        expect(result.removed).toEqual(13)
     })
 })
