@@ -1,3 +1,11 @@
+export const solutionPart1 = (input:string) => {
+    return solution(input).password
+}
+
+export const solutionPart2 = (input:string) => {
+    return solution(input)['0x434C49434B']
+}
+
 export const solution = (input:string) => {
     const steps = input.trim().split('\n')
     let startingPosition = 50
