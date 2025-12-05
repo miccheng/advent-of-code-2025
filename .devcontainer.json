@@ -8,8 +8,7 @@
         "vscode": {
             "settings": {
                 "editor.formatOnSave": true,
-                "editor.tabSize": 4,
-                "editor.renderWhitespace": "all"
+                "editor.tabSize": 4
             },
             "extensions": [
                 "MS-vsliveshare.vsliveshare",
