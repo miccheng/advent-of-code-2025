@@ -19,13 +19,9 @@ export const solutionPart2 = (input: string) => {
     const data = parserInput(input)
     
     const freshSet = buildFreshList(data.freshIngredientIDRanges)
-    // console.log(freshSet.length)
     const normalizedRanges = normalizeRanges(freshSet)
-    // console.log(normalizedRanges)
-    // console.log(normalizedRanges.length)
 
     return normalizedRanges.reduce((acc, curr) => {
-        console.log(curr, 'Num between', (curr.max - curr.min) + 1)
         acc += (curr.max - curr.min) + 1
         return acc
     }, 0)
@@ -63,8 +59,14 @@ export const normalizeRanges = (ranges: { min: number, max: number }[]): { min: 
         
         const last = normalizedRanges[normalizedRanges.length - 1]
         
-        if (range.min <= last.max && range.max >= last.max) {
-            normalizedRanges[normalizedRanges.length - 1].max = range.max
+        if (Math.max(range.min, last.min) <= Math.min(range.max, last.max)) {
+        // if (!(range.max < last.min || range.min > last.min)) {
+        // if (range.min <= last.max && range.max >= last.max) {
+        // normalizedRanges[normalizedRanges.length - 1].max = range.max
+            normalizedRanges[normalizedRanges.length - 1] = { 
+                min: Math.min(range.min, last.min),
+                max: Math.max(range.max, last.max),
+            }
             continue
         }
 
