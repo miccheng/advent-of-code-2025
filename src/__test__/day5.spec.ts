@@ -16,7 +16,7 @@ describe('Day 5 Tests', () => {
 
     test('Example Inputs', () => {
         expect(solutionPart1(exampleInput)).toEqual(3);
-        // expect(solutionPart2("")).toEqual(0);
+        expect(solutionPart2(exampleInput)).toEqual(14);
     })
 
     test('Parser', () => {
@@ -29,8 +29,8 @@ describe('Day 5 Tests', () => {
     test('buildFreshList', () => {
         const result = buildFreshList([ '3-5', '10-14'])
         expect(Array.from(result)).toEqual([
-                [3,5],
-                [10,14]
+                { min: 3, max: 5 },
+                { min: 10, max: 14 }
             ])
     })
 })
