@@ -1,13 +1,36 @@
 import { describe, expect, test } from 'vitest'
-import { solutionPart1, solutionPart2, parserInput } from '../day5'
+import { solutionPart1, solutionPart2, parserInput, buildFreshList } from '../day5'
 
 describe('Day 5 Tests', () => {
+    const exampleInput = `3-5
+10-14
+16-20
+12-18
+
+1
+5
+8
+11
+17
+32`
+
     test('Example Inputs', () => {
-        expect(solutionPart1("")).toEqual(0);
-        expect(solutionPart2("")).toEqual(0);
+        expect(solutionPart1(exampleInput)).toEqual(3);
+        // expect(solutionPart2("")).toEqual(0);
     })
 
     test('Parser', () => {
-        expect(parserInput('')).toEqual([])
+        expect(parserInput(exampleInput)).toEqual({
+    freshIngredientIDRanges: [ '3-5', '10-14', '16-20', '12-18' ],
+    ingredients: [ 1, 5, 8, 11, 17, 32 ]
+})
+    })
+
+    test('buildFreshList', () => {
+        const result = buildFreshList([ '3-5', '10-14'])
+        expect(Array.from(result)).toEqual([
+                [3,5],
+                [10,14]
+            ])
     })
 })
