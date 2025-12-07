@@ -5,6 +5,7 @@ export const solutionPart1 = (input: string): number => {
     let beamDrop: number[] = [data.startingPoint]
     for(let r=0; r < data.manifold.length; r++) {
         // console.log('Org Row', r, data.manifold[r])
+        let splits = 0
         let row = data.manifold[r].split('')
         let nextBeamDrop: number[] = []
         for(const beamPos of beamDrop) {
@@ -15,15 +16,16 @@ export const solutionPart1 = (input: string): number => {
 
                 if (leftBeam > -1 && rightBeam < data.width) {
                     splitCounter++
+                    splits++
 
-                    if (row[leftBeam] === '.') {
+                    if (['.', '?'].includes(row[leftBeam])) {
                         row[leftBeam] = '|'
                         if (!nextBeamDrop.includes(leftBeam)) {
                             nextBeamDrop.push(leftBeam)
                         }
                     } 
                     
-                    if (row[rightBeam] === '.') {
+                    if (['.', '?'].includes(row[rightBeam])) {
                         row[rightBeam] = '|'
                         if (!nextBeamDrop.includes(rightBeam)) {
                             nextBeamDrop.push(rightBeam)
@@ -37,6 +39,7 @@ export const solutionPart1 = (input: string): number => {
         }
         beamDrop = nextBeamDrop
         data.manifold[r] = row.join('')
+        // console.log(`Splits in row ${r}: ${splits}`)
         // console.log('New Row', data.manifold[r])
     }
 
