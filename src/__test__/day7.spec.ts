@@ -1,5 +1,5 @@
 import { describe, expect, test } from 'vitest'
-import { solutionPart1, solutionPart2, parserInput } from '../day7'
+import { solutionPart1, solutionPart2, parserInput, locateAllSplitters, locateAllTachyonBeams } from '../day7'
 
 describe('Day 7 Tests', () => {
     const exampleInput = `.......S.......
@@ -45,6 +45,26 @@ describe('Day 7 Tests', () => {
                 '.^.^.^.^.^...^.',
                 '...............',
             ]
+        })
+    })
+
+    describe('locateAllSplitters', () => {
+        test('no spliter', () => {
+            expect(locateAllSplitters('')).toEqual([])
+        })
+
+        test('find 1 splitter', () => {
+            expect(locateAllSplitters('.......^.......')).toEqual([7])
+        })
+    })
+
+    describe('locateAllTachyonBeams', () => {
+        test('no spliter', () => {
+            expect(locateAllTachyonBeams('')).toEqual([])
+        })
+
+        test('find 1 splitter', () => {
+            expect(locateAllTachyonBeams('......|^|......')).toEqual([6, 8])
         })
     })
 })
