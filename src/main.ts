@@ -55,7 +55,7 @@ switch (true) {
         console.log('Day 7 Solution (Part 2):', day7Part2Solution(fetchInput('7')))
         if (runFor === '7') break
     case ['all', '8'].includes(runFor):
-        console.log('Day 8 Solution (Part 1):', day8Part1Solution(fetchInput('8')))
+        console.log('Day 8 Solution (Part 1):', day8Part1Solution(fetchInput('8'), 1000))
         console.log('Day 8 Solution (Part 2):', day8Part2Solution(fetchInput('8')))
         if (runFor === '8') break
     case ['all', '9'].includes(runFor):

@@ -1,5 +1,5 @@
-import { describe, expect, test } from 'vitest'
-import { JunctionBox, solutionPart1, solutionPart2, parserInput, euclideanDistance, collateAllDistances } from '../day8'
+import { beforeEach, describe, expect, test } from 'vitest'
+import { Circuit, JunctionBox, solutionPart1, solutionPart2, parserInput, euclideanDistance, collateAllDistances } from '../day8'
 
 describe('Day 8 Tests', () => {
     const exampleInput = `162,817,812
@@ -24,7 +24,7 @@ describe('Day 8 Tests', () => {
 425,690,689`
 
     test('Example Inputs', () => {
-        expect(solutionPart1(exampleInput)).toEqual(40);
+        expect(solutionPart1(exampleInput, 10)).toEqual(40);
         expect(solutionPart2("")).toEqual(0);
     })
 
@@ -90,6 +90,41 @@ describe('Day 8 Tests', () => {
             console.log(result.length, result)
             expect(result).not.toEqual({})
 
+        })
+    })
+
+    describe('Circuit', () => {
+        let p: JunctionBox
+        let q: JunctionBox
+        let subject: Circuit
+        beforeEach(() => {
+            p = new JunctionBox('162, 817, 812')
+            q = new JunctionBox('425, 690, 689')
+            subject = new Circuit([p, q])
+        })
+        test('constructor', () => {
+            expect(subject.length).toEqual(2)
+        })
+
+        test('hasNode', () => {
+            expect(subject.hasNode(p)).toEqual(true)
+            expect(subject.hasNode(q)).toEqual(true)
+        })
+
+        test('areSameCircuit', () => {
+            expect(subject.areSameCircuit(p, q)).toEqual(true)
+
+            const newNode = new JunctionBox('431,825,988')
+            expect(subject.areSameCircuit(newNode, p)).toEqual(false)
+        })
+
+        test('add', () => {
+            subject.add(p)
+            expect(subject.length).toEqual(2)
+
+            const newNode = new JunctionBox('431,825,988')
+            subject.add(newNode)
+            expect(subject.length).toEqual(3)
         })
     })
 })
