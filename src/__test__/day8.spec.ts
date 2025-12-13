@@ -57,7 +57,7 @@ describe('Day 8 Tests', () => {
         test('shortest points', () => {
             const p = new JunctionBox('162, 817, 812')
             const q = new JunctionBox('425, 690, 689')
-            expect(euclideanDistance(p, q)).toEqual(317)
+            expect(euclideanDistance(p, q)).toEqual(316.90219311326956)
         })
     })
 
@@ -87,7 +87,7 @@ describe('Day 8 Tests', () => {
             ]
             const result = collateAllDistances(nodes)
 
-            console.log(result.length, result)
+            // console.log(result.length, result)
             expect(result).not.toEqual({})
 
         })

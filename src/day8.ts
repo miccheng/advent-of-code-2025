@@ -17,6 +17,7 @@ export class JunctionBox {
 
 export class Circuit {
     public nodes: { [key: string]: JunctionBox } = {}
+    private counter = 0
 
     constructor(nodePair?: JunctionBox[]) {
         if (nodePair) {
@@ -36,11 +37,12 @@ export class Circuit {
     add(node: JunctionBox) {
         if (!this.hasNode(node)) {
             this.nodes[node.id] = node
+            this.counter++
         }
     }
 
     get length(): number {
-        return Object.keys(this.nodes).length
+        return this.counter
     }
 }
 
@@ -48,6 +50,7 @@ export const solutionPart1 = (input: string, first: number) => {
     const nodes = parserInput(input)
 
     const orderedPairs = collateAllDistances(nodes)
+    console.log('Ordered Distances', JSON.stringify(orderedPairs, null, 2))
 
     let cableUsed = 0
     const circuits: Circuit[] = []
@@ -64,8 +67,7 @@ export const solutionPart1 = (input: string, first: number) => {
             if (circuits[c].areSameCircuit(orderedPairs[i].nodes[0], orderedPairs[i].nodes[1])) {
                 addedToExistingCircuit = true
                 break
-            }
-            if (circuits[c].hasNode(orderedPairs[i].nodes[0]) || circuits[c].hasNode(orderedPairs[i].nodes[1])) {
+            } else if (circuits[c].hasNode(orderedPairs[i].nodes[0]) || circuits[c].hasNode(orderedPairs[i].nodes[1])) {
                 circuits[c].add(orderedPairs[i].nodes[0])
                 circuits[c].add(orderedPairs[i].nodes[1])
                 cableUsed++
@@ -80,19 +82,19 @@ export const solutionPart1 = (input: string, first: number) => {
         }
 
         if (cableUsed === first) {
-            console.log(cableUsed)
+            // console.log(cableUsed, 'cables used')
             break
         } 
     }
 
-    const sortedCircuits = circuits.map(c => c.length).sort((a, b) => b - a)
+    const sortedCircuits = circuits.sort((a, b) => b.length - a.length)
 
-    console.log(JSON.stringify(sortedCircuits))
+    // console.log(JSON.stringify(sortedCircuits, null, 2))
 
     return sortedCircuits
         .slice(0, 3)
         .reduce((acc, curr) => {
-            return acc * curr
+            return acc * curr.length
         }, 1)
 }
 
@@ -109,11 +111,11 @@ export const parserInput = (input:string): JunctionBox[] => {
 }
 
 export const euclideanDistance = (p: JunctionBox, q: JunctionBox) => {
-    return Math.round(Math.sqrt(Math.pow((p.x - q.x), 2) + Math.pow((p.y - q.y), 2) + Math.pow((p.z - q.z), 2)))
+    return Math.sqrt(Math.pow((p.x - q.x), 2) + Math.pow((p.y - q.y), 2) + Math.pow((p.z - q.z), 2))
 }
 
 export const collateAllDistances = (nodes: JunctionBox[]) => {
-    const distances: {key: string, distance: number, nodes: JunctionBox[]}[] = []
+    const distances: {keys: string[], distance: number, nodes: JunctionBox[]}[] = []
     const uniquePairs: { [key: string]: number } = {}
 
     for (const pNode of nodes) {
@@ -129,7 +131,7 @@ export const collateAllDistances = (nodes: JunctionBox[]) => {
 
             const d = euclideanDistance(pNode, qNode)
             distances.push({
-                key: combo1,
+                keys: [ combo1, combo2 ],
                 distance: d,
                 nodes: [pNode, qNode]
             })
@@ -137,7 +139,7 @@ export const collateAllDistances = (nodes: JunctionBox[]) => {
         }
     }
 
-    // console.log(uniquePairs)
+    // console.log('Distances', Object.values(uniquePairs).sort((a, b) => a - b))
 
     return distances.sort((a, b) => a.distance - b.distance)
 }
