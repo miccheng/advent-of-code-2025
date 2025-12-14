@@ -3,13 +3,13 @@ export const solutionPart1 = (input: string): number => {
 
     let splitCounter = 0
     let beamDrop: number[] = [data.startingPoint]
-    for(let r=0; r < data.manifold.length; r++) {
+    for(let r=0; r < data.grid.length; r++) {
         // console.log('Org Row', r, data.manifold[r])
         let splits = 0
-        let row = data.manifold[r].split('')
+        let row = data.grid[r]
         let nextBeamDrop: number[] = []
         for(const beamPos of beamDrop) {
-            if (row[beamPos] === '^') {
+            if (row[beamPos].type === NodeType.Splitter) {
                 // console.log('Above the splitter is', data.manifold[r-1][beamPos])
                 const leftBeam = beamPos-1
                 const rightBeam = beamPos+1
@@ -18,27 +18,30 @@ export const solutionPart1 = (input: string): number => {
                     splitCounter++
                     splits++
 
-                    if (['.', '?'].includes(row[leftBeam])) {
-                        row[leftBeam] = '|'
+                    if ([NodeType.Manifold, NodeType.Beam].includes(row[leftBeam].type)) {
+                        // row[leftBeam] = '|'
+                        data.grid[r][leftBeam].type = NodeType.Beam
                         if (!nextBeamDrop.includes(leftBeam)) {
                             nextBeamDrop.push(leftBeam)
                         }
                     } 
                     
-                    if (['.', '?'].includes(row[rightBeam])) {
-                        row[rightBeam] = '|'
+                    if ([NodeType.Manifold, NodeType.Beam].includes(row[rightBeam].type)) {
+                        // row[rightBeam] = '|'
+                        data.grid[r][rightBeam].type = NodeType.Beam
                         if (!nextBeamDrop.includes(rightBeam)) {
                             nextBeamDrop.push(rightBeam)
                         }
                     }
                 }
-            } else if (row[beamPos] === '.') {
-                row[beamPos] = '?'
+            } else if (row[beamPos].type === NodeType.Manifold) {
+                // row[beamPos] = '?'
+                data.grid[r][beamPos].type = NodeType.Beam
                 nextBeamDrop.push(beamPos)
             }
         }
         beamDrop = nextBeamDrop
-        data.manifold[r] = row.join('')
+        // data.manifold[r] = row.join('')
         // console.log(`Splits in row ${r}: ${splits}`)
         // console.log('New Row', data.manifold[r])
     }
@@ -67,11 +70,10 @@ export type Node = {
     right?: Node
 }
 
-export const parserInput = (input:string): { width: number, startingPoint: number, manifold: string[], grid: Node[][] } => {
-    const result: { width: number, startingPoint: number, manifold: string[], grid: Node[][] } = {
+export const parserInput = (input:string): { width: number, startingPoint: number, grid: Node[][] } => {
+    const result: { width: number, startingPoint: number, grid: Node[][] } = {
         width: 0,
         startingPoint: 0, 
-        manifold: [],
         grid: []
     }
 
@@ -83,10 +85,8 @@ export const parserInput = (input:string): { width: number, startingPoint: numbe
         result.startingPoint = startingRow.indexOf('S')
     }
 
-    result.manifold = rows
-
-    for (let r=0; r < result.manifold.length; r++) {
-        const row = result.manifold[r]
+    for (let r=0; r < rows.length; r++) {
+        const row = rows[r]
         const cells = row.split('')
 
         result.grid[r] = []
