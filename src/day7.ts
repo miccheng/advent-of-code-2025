@@ -52,11 +52,27 @@ export const solutionPart2 = (input: string) => {
     return 0
 }
 
-export const parserInput = (input:string): { width: number, startingPoint: number, manifold: string[] } => {
-    const result: { width: number, startingPoint: number, manifold: string[] } = {
+export enum NodeType {
+    Manifold = '.',
+    Splitter = '^',
+    Beam = '|',
+}
+
+export type Node = {
+    type: NodeType
+    row: number
+    col: number
+    bottom?: Node
+    left?: Node
+    right?: Node
+}
+
+export const parserInput = (input:string): { width: number, startingPoint: number, manifold: string[], grid: Node[][] } => {
+    const result: { width: number, startingPoint: number, manifold: string[], grid: Node[][] } = {
         width: 0,
         startingPoint: 0, 
-        manifold: []
+        manifold: [],
+        grid: []
     }
 
     const rows = input.trim().split("\n")
@@ -68,6 +84,28 @@ export const parserInput = (input:string): { width: number, startingPoint: numbe
     }
 
     result.manifold = rows
+
+    for (let r=0; r < result.manifold.length; r++) {
+        const row = result.manifold[r]
+        const cells = row.split('')
+
+        result.grid[r] = []
+
+        for (let c = 0; c < cells.length; c++) {
+            const cell = cells[c];
+            switch (cell) {
+                case '^':
+                    result.grid[r][c] = { type: NodeType.Splitter, row: r, col: c }
+                    break;
+                case '|':
+                    result.grid[r][c] = { type: NodeType.Beam, row: r, col: c }
+                    break;
+                default:
+                    result.grid[r][c] = { type: NodeType.Manifold, row: r, col: c }
+                    break;
+            }
+        }
+    }
 
     return result
 }

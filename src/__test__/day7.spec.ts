@@ -25,26 +25,60 @@ describe('Day 7 Tests', () => {
     })
 
     test('Parser', () => {
-        expect(parserInput(exampleInput)).toEqual({
-            width: 15,
-            startingPoint: 7,
-            manifold: [
-                '...............',
-                '.......^.......',
-                '...............',
-                '......^.^......',
-                '...............',
-                '.....^.^.^.....',
-                '...............',
-                '....^.^...^....',
-                '...............',
-                '...^.^...^.^...',
-                '...............',
-                '..^...^.....^..',
-                '...............',
-                '.^.^.^.^.^...^.',
-                '...............',
-            ]
+        const result = parserInput(exampleInput)
+        expect(result.width).toEqual(15)
+        expect(result.startingPoint).toEqual(7)
+        expect(result.manifold).toEqual([
+            '...............',
+            '.......^.......',
+            '...............',
+            '......^.^......',
+            '...............',
+            '.....^.^.^.....',
+            '...............',
+            '....^.^...^....',
+            '...............',
+            '...^.^...^.^...',
+            '...............',
+            '..^...^.....^..',
+            '...............',
+            '.^.^.^.^.^...^.',
+            '...............',
+        ])
+    })
+
+    describe('buildGrid', () => {
+        test('builds a small grid', () => {
+            expect(parserInput(``).grid).toEqual([])
+            expect(parserInput(`.S
+..
+..`).grid).toEqual([
+    [
+        { type: '.', row: 0, col: 0 },
+        { type: '.', row: 0, col: 1 },
+    ],
+    [
+        { type: '.', row: 1, col: 0 },
+        { type: '.', row: 1, col: 1 },
+    ],
+])
+        })
+
+        test('builds a grid with splitter', () => {
+            expect(parserInput(`.S.
+...
+.^.`).grid).toEqual([
+    [
+        { type: '.', row: 0, col: 0 },
+        { type: '.', row: 0, col: 1 },
+        { type: '.', row: 0, col: 2 },
+    ],
+    [
+        { type: '.', row: 1, col: 0 },
+        { type: '^', row: 1, col: 1 },
+        { type: '.', row: 1, col: 2 },
+    ],
+])
         })
     })
 
