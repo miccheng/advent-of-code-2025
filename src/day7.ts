@@ -90,6 +90,9 @@ export const buildTachyonTrail = (data: TeleporterInput): { grid: Node[][], spli
         let nextBeamDrop: number[] = []
         for(const beamPos of beamDrop) {
             if (row[beamPos].type === NodeType.Splitter) {
+                if (r > 0 && result.grid[r-1][beamPos].type === NodeType.Beam) {
+                    result.grid[r-1][beamPos].next = { row: r, col: beamPos }
+                }
                 const leftBeamPos = beamPos-1
                 const rightBeamPos = beamPos+1
 
@@ -108,7 +111,7 @@ export const buildTachyonTrail = (data: TeleporterInput): { grid: Node[][], spli
                     
                     if ([NodeType.Manifold, NodeType.Beam].includes(row[rightBeamPos].type)) {
                         result.grid[r][rightBeamPos].type = NodeType.Beam
-                        result.grid[r][beamPos].right = { row: r, col: leftBeamPos }
+                        result.grid[r][beamPos].right = { row: r, col: rightBeamPos }
 
                         if (!nextBeamDrop.includes(rightBeamPos)) {
                             nextBeamDrop.push(rightBeamPos)

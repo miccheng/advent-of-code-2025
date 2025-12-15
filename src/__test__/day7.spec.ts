@@ -1,5 +1,5 @@
 import { describe, expect, test } from 'vitest'
-import { solutionPart1, solutionPart2, parserInput, locateAllSplitters, locateAllTachyonBeams } from '../day7'
+import { solutionPart1, solutionPart2, parserInput, buildTachyonTrail, locateAllSplitters, locateAllTachyonBeams } from '../day7'
 
 describe('Day 7 Tests', () => {
     const exampleInput = `.......S.......
@@ -79,6 +79,70 @@ describe('Day 7 Tests', () => {
         { type: '.', row: 1, col: 2 },
     ],
 ])
+        })
+    })
+
+    describe('buildTachyonTrail', () => {
+        test('small grid with 1 splitter', () => {
+            const input = parserInput(`.S.
+...
+.^.
+...`)
+            const result = buildTachyonTrail(input)
+
+            expect(result.grid).toEqual([
+                [
+                    { type: '.', row: 0, col: 0 },
+                    { type: '|', row: 0, col: 1, next: { row: 1, col: 1 } },
+                    { type: '.', row: 0, col: 2 },
+                ],
+                [
+                    { type: '|', row: 1, col: 0, next: { row: 2, col: 0 } },
+                    { type: '^', row: 1, col: 1, left: { row: 1, col: 0 }, right: { row: 1, col: 2 } },
+                    { type: '|', row: 1, col: 2, next: { row: 2, col: 2 } },
+                ],
+                [
+                    { type: '|', row: 2, col: 0 },
+                    { type: '.', row: 2, col: 1 },
+                    { type: '|', row: 2, col: 2 },
+                ],
+            ])
+        })
+
+        test('small grid with 2 splitters', () => {
+            const input = parserInput(`.S..
+....
+.^..
+..^.
+....`)
+            const result = buildTachyonTrail(input)
+
+            expect(result.grid).toEqual([
+                [
+                    { type: '.', row: 0, col: 0 },
+                    { type: '|', row: 0, col: 1, next: { row: 1, col: 1 } },
+                    { type: '.', row: 0, col: 2 },
+                    { type: '.', row: 0, col: 3 },
+                ],
+                [
+                    { type: '|', row: 1, col: 0, next: { row: 2, col: 0 } },
+                    { type: '^', row: 1, col: 1, left: { row: 1, col: 0 }, right: { row: 1, col: 2 } },
+                    { type: '|', row: 1, col: 2, next: { row: 2, col: 2 } },
+                    { type: '.', row: 1, col: 3 },
+                ],
+                [
+                    { type: '|', row: 2, col: 0, next: { row: 3, col: 0 } },
+                    { type: '|', row: 2, col: 1, next: { row: 3, col: 1 } },
+                    { type: '^', row: 2, col: 2, left: { row: 2, col: 1 }, right: { row: 2, col: 3 } },
+                    { type: '|', row: 2, col: 3, next: { row: 3, col: 3 } },
+                ],
+                [
+                    { type: '|', row: 3, col: 0 },
+                    { type: '|', row: 3, col: 1 },
+                    { type: '.', row: 3, col: 2 },
+                    { type: '|', row: 3, col: 3 },
+                ]
+            ])
         })
     })
 
