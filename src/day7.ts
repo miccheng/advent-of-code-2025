@@ -7,8 +7,11 @@ export const solutionPart1 = (input: string): number => {
 
 export const solutionPart2 = (input: string) => {
     const data = parserInput(input)
+    const manifolds = buildTachyonTrail(data)
 
-    return 0
+    console.log(drawTree(manifolds.grid))
+
+    return quantumTraversal(data.startingPoint, manifolds.grid)
 }
 
 export enum NodeType {
@@ -131,6 +134,40 @@ export const buildTachyonTrail = (data: TeleporterInput): { grid: Node[][], spli
     }
 
     return result
+}
+
+export const quantumTraversal = (startingPoint: number, tachyonTrail: Node[][]): number => {
+    const result: Coord[] = []
+
+    let current: Coord = { row: 0, col: startingPoint }
+
+    let counter: number = 0
+
+    const traverse = (node: Coord) => {
+        // result.push(node)
+        if (
+            tachyonTrail[node.row][node.col].next === undefined &&
+            tachyonTrail[node.row][node.col].left === undefined &&
+            tachyonTrail[node.row][node.col].right === undefined
+        ) counter++
+        if (tachyonTrail[node.row][node.col].next) traverse(tachyonTrail[node.row][node.col].next!)
+        if (tachyonTrail[node.row][node.col].left) traverse(tachyonTrail[node.row][node.col].left!)
+        if (tachyonTrail[node.row][node.col].right) traverse(tachyonTrail[node.row][node.col].right!)
+    }
+
+    traverse(current)
+
+    // console.log(result)
+
+    return counter
+}
+
+export const drawTree = (tachyonTrail: Node[][]) => {
+    return tachyonTrail.map(row => {
+        return row.map(cell => {
+            return cell.type.toString()
+        }).join('')
+    }).join("\n")
 }
 
 export const locateAllSplitters = (input: string): number[] => {

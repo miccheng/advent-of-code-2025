@@ -1,5 +1,5 @@
 import { describe, expect, test } from 'vitest'
-import { solutionPart1, solutionPart2, parserInput, buildTachyonTrail, locateAllSplitters, locateAllTachyonBeams } from '../day7'
+import { solutionPart1, solutionPart2, parserInput, buildTachyonTrail, quantumTraversal, drawTree, locateAllSplitters, locateAllTachyonBeams } from '../day7'
 
 describe('Day 7 Tests', () => {
     const exampleInput = `.......S.......
@@ -28,23 +28,6 @@ describe('Day 7 Tests', () => {
         const result = parserInput(exampleInput)
         expect(result.width).toEqual(15)
         expect(result.startingPoint).toEqual(7)
-        // expect(result.manifold).toEqual([
-        //     '...............',
-        //     '.......^.......',
-        //     '...............',
-        //     '......^.^......',
-        //     '...............',
-        //     '.....^.^.^.....',
-        //     '...............',
-        //     '....^.^...^....',
-        //     '...............',
-        //     '...^.^...^.^...',
-        //     '...............',
-        //     '..^...^.....^..',
-        //     '...............',
-        //     '.^.^.^.^.^...^.',
-        //     '...............',
-        // ])
     })
 
     describe('buildGrid', () => {
@@ -107,6 +90,7 @@ describe('Day 7 Tests', () => {
                     { type: '|', row: 2, col: 2 },
                 ],
             ])
+            console.log(drawTree(result.grid))
         })
 
         test('small grid with 2 splitters', () => {
@@ -143,6 +127,22 @@ describe('Day 7 Tests', () => {
                     { type: '|', row: 3, col: 3 },
                 ]
             ])
+            console.log(drawTree(result.grid))
+        })
+    })
+
+    describe('traverse', () => {
+        test('can traverse the binary tree', () => {
+            const input = parserInput(`.S..
+....
+.^..
+..^.
+....`)
+            const manifolds = buildTachyonTrail(input)
+            const result = quantumTraversal(input.startingPoint, manifolds.grid)
+
+            console.log('Coord Traversal', result)
+            expect(result).not.toEqual([])
         })
     })
 
