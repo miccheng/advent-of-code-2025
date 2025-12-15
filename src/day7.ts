@@ -2,16 +2,19 @@ export const solutionPart1 = (input: string): number => {
     const data = parserInput(input)
     const result = buildTachyonTrail(data)
 
+    // console.log(drawTree(result.grid))
+
     return result.splitCounter
 }
 
 export const solutionPart2 = (input: string) => {
     const data = parserInput(input)
-    const manifolds = buildTachyonTrail(data)
+    const result = buildTachyonTrail(data)
 
-    console.log(drawTree(manifolds.grid))
+    // console.log(drawTree(manifolds.grid))
+    // return quantumTraversal(data.startingPoint, manifolds.grid)
 
-    return quantumTraversal(data.startingPoint, manifolds.grid)
+    return result.pathwayCount
 }
 
 export enum NodeType {
@@ -80,12 +83,13 @@ export const parserInput = (input:string): TeleporterInput => {
     return result
 }
 
-export const buildTachyonTrail = (data: TeleporterInput): { grid: Node[][], splitCounter: number } => {
-    const result: { grid: Node[][], splitCounter: number } = {
+export const buildTachyonTrail = (data: TeleporterInput): { grid: Node[][], splitCounter: number, pathwayCount: number } => {
+    const result: { grid: Node[][], splitCounter: number, pathwayCount: number } = {
         grid: data.grid,
-        splitCounter: 0
+        splitCounter: 0,
+        pathwayCount: 0
     }
-
+    const pathwayCounters: Record<number, number> = { [data.startingPoint]: 1 }
     let beamDrop: number[] = [data.startingPoint]
     for(let r=0; r < result.grid.length; r++) {
         let splits = 0
@@ -106,6 +110,12 @@ export const buildTachyonTrail = (data: TeleporterInput): { grid: Node[][], spli
                     if ([NodeType.Manifold, NodeType.Beam].includes(row[leftBeamPos].type)) {
                         result.grid[r][leftBeamPos].type = NodeType.Beam
                         result.grid[r][beamPos].left = { row: r, col: leftBeamPos }
+                        
+                        if (!pathwayCounters[leftBeamPos]) {
+                            pathwayCounters[leftBeamPos] = pathwayCounters[beamPos]
+                        } else {
+                            pathwayCounters[leftBeamPos] += pathwayCounters[beamPos]
+                        }
 
                         if (!nextBeamDrop.includes(leftBeamPos)) {
                             nextBeamDrop.push(leftBeamPos)
@@ -116,10 +126,18 @@ export const buildTachyonTrail = (data: TeleporterInput): { grid: Node[][], spli
                         result.grid[r][rightBeamPos].type = NodeType.Beam
                         result.grid[r][beamPos].right = { row: r, col: rightBeamPos }
 
+                        if (!pathwayCounters[rightBeamPos]) {
+                            pathwayCounters[rightBeamPos] = pathwayCounters[beamPos]
+                        } else {
+                            pathwayCounters[rightBeamPos] += pathwayCounters[beamPos]
+                        }
+
                         if (!nextBeamDrop.includes(rightBeamPos)) {
                             nextBeamDrop.push(rightBeamPos)
                         }
                     }
+
+                    delete pathwayCounters[beamPos]
                 }
             } else if (row[beamPos].type === NodeType.Manifold) {
                 result.grid[r][beamPos].type = NodeType.Beam
@@ -132,6 +150,8 @@ export const buildTachyonTrail = (data: TeleporterInput): { grid: Node[][], spli
         }
         beamDrop = nextBeamDrop
     }
+
+    result.pathwayCount = Object.values(pathwayCounters).reduce((acc, curr) => acc + curr, 0)
 
     return result
 }

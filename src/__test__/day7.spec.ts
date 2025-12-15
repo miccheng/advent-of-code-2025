@@ -90,7 +90,7 @@ describe('Day 7 Tests', () => {
                     { type: '|', row: 2, col: 2 },
                 ],
             ])
-            console.log(drawTree(result.grid))
+            // console.log(drawTree(result.grid))
         })
 
         test('small grid with 2 splitters', () => {
@@ -127,7 +127,7 @@ describe('Day 7 Tests', () => {
                     { type: '|', row: 3, col: 3 },
                 ]
             ])
-            console.log(drawTree(result.grid))
+            // console.log(drawTree(result.grid))
         })
     })
 
@@ -141,7 +141,7 @@ describe('Day 7 Tests', () => {
             const manifolds = buildTachyonTrail(input)
             const result = quantumTraversal(input.startingPoint, manifolds.grid)
 
-            console.log('Coord Traversal', result)
+            // console.log('Coord Traversal', result)
             expect(result).not.toEqual([])
         })
     })
