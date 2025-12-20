@@ -43,6 +43,12 @@ export class Circuit {
         }
     }
 
+    merge(circuit: Circuit) {
+        Object.keys(circuit.nodes).map(key => {
+            this.add(circuit.nodes[key])
+        })
+    }
+
     get length(): number {
         return this.counter
     }
@@ -52,44 +58,47 @@ export const solutionPart1 = (input: string, first: number) => {
     const nodes = parserInput(input)
 
     const orderedPairs = collateAllDistances(nodes)
-    console.log('Ordered Distances', JSON.stringify(orderedPairs, null, 2))
+    // console.log('Ordered Distances', JSON.stringify(orderedPairs.map(item=> [`${item.nodes[0].pos} - ${item.nodes[0].id}`, `${item.nodes[1].pos} - ${item.nodes[1].id}`, item.distance]  ), null, 2))
 
     let cableUsed = 0
     const circuits: Circuit[] = []
 
-    for (let i=0; i < orderedPairs.length; i++) {
+    for (let i=0; i < first; i++) {
         if (i === 0) {
             circuits.push(new Circuit([...orderedPairs[i].nodes]))
             cableUsed++
             continue
         }
 
-        let addedToExistingCircuit = false
+        let addedToExistingCircuit: number[] = []
         for(let c=0; c < circuits.length; c++) {
+            if(circuits[c] == undefined) {
+                continue
+            }
             if (circuits[c].areSameCircuit(orderedPairs[i].nodes[0], orderedPairs[i].nodes[1])) {
-                addedToExistingCircuit = true
+                addedToExistingCircuit.push(c)
                 break
             } else if (circuits[c].hasNode(orderedPairs[i].nodes[0]) || circuits[c].hasNode(orderedPairs[i].nodes[1])) {
                 circuits[c].add(orderedPairs[i].nodes[0])
                 circuits[c].add(orderedPairs[i].nodes[1])
                 cableUsed++
-                addedToExistingCircuit = true
-                break
+                addedToExistingCircuit.push(c)
             }
         }
 
-        if (!addedToExistingCircuit) {
+        if (addedToExistingCircuit.length === 0) {
             circuits.push(new Circuit([...orderedPairs[i].nodes]))
             cableUsed++
-        }
+        } else if (addedToExistingCircuit.length === 2) {
+            // Merge Circutis
+            const [first, second] = addedToExistingCircuit
 
-        if (cableUsed === first) {
-            // console.log(cableUsed, 'cables used')
-            break
-        } 
+            circuits[first].merge(circuits[second])
+            delete circuits[second]
+        }
     }
 
-    const sortedCircuits = circuits.sort((a, b) => b.length - a.length)
+    const sortedCircuits = circuits.filter(item=> item != undefined).sort((a, b) => b.length - a.length)
 
     // console.log(JSON.stringify(sortedCircuits, null, 2))
 

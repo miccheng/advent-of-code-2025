@@ -114,7 +114,7 @@ describe('Day 8 Tests', () => {
         test('areSameCircuit', () => {
             expect(subject.areSameCircuit(p, q)).toEqual(true)
 
-            const newNode = new JunctionBox('0', '431,825,988')
+            const newNode = new JunctionBox('2', '431, 825, 988')
             expect(subject.areSameCircuit(newNode, p)).toEqual(false)
         })
 
@@ -122,8 +122,17 @@ describe('Day 8 Tests', () => {
             subject.add(p)
             expect(subject.length).toEqual(2)
 
-            const newNode = new JunctionBox('0', '431,825,988')
+            const newNode = new JunctionBox('2', '431, 825, 988')
             subject.add(newNode)
+            expect(subject.length).toEqual(3)
+        })
+
+        test('merge', () => {
+            const s = new JunctionBox('2', '431, 825, 988')
+            const subject2 = new Circuit([p, s])
+
+            subject.merge(subject2)
+
             expect(subject.length).toEqual(3)
         })
     })
