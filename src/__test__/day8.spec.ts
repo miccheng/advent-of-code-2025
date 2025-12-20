@@ -25,7 +25,7 @@ describe('Day 8 Tests', () => {
 
     test('Example Inputs', () => {
         expect(solutionPart1(exampleInput, 10)).toEqual(40);
-        expect(solutionPart2("")).toEqual(0);
+        expect(solutionPart2(exampleInput)).toEqual(25272);
     })
 
     test('Parser', () => {

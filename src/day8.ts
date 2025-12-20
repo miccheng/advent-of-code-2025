@@ -60,13 +60,11 @@ export const solutionPart1 = (input: string, first: number) => {
     const orderedPairs = collateAllDistances(nodes)
     // console.log('Ordered Distances', JSON.stringify(orderedPairs.map(item=> [`${item.nodes[0].pos} - ${item.nodes[0].id}`, `${item.nodes[1].pos} - ${item.nodes[1].id}`, item.distance]  ), null, 2))
 
-    let cableUsed = 0
     const circuits: Circuit[] = []
 
     for (let i=0; i < first; i++) {
         if (i === 0) {
             circuits.push(new Circuit([...orderedPairs[i].nodes]))
-            cableUsed++
             continue
         }
 
@@ -81,14 +79,12 @@ export const solutionPart1 = (input: string, first: number) => {
             } else if (circuits[c].hasNode(orderedPairs[i].nodes[0]) || circuits[c].hasNode(orderedPairs[i].nodes[1])) {
                 circuits[c].add(orderedPairs[i].nodes[0])
                 circuits[c].add(orderedPairs[i].nodes[1])
-                cableUsed++
                 addedToExistingCircuit.push(c)
             }
         }
 
         if (addedToExistingCircuit.length === 0) {
             circuits.push(new Circuit([...orderedPairs[i].nodes]))
-            cableUsed++
         } else if (addedToExistingCircuit.length === 2) {
             // Merge Circutis
             const [first, second] = addedToExistingCircuit
@@ -110,7 +106,58 @@ export const solutionPart1 = (input: string, first: number) => {
 }
 
 export const solutionPart2 = (input: string) => {
-    const data = parserInput(input)
+    const nodes = parserInput(input)
+
+    const orderedPairs = collateAllDistances(nodes)
+    // console.log('Ordered Distances', JSON.stringify(orderedPairs.map(item=> [`${item.nodes[0].pos} - ${item.nodes[0].id}`, `${item.nodes[1].pos} - ${item.nodes[1].id}`, item.distance]  ), null, 2))
+
+    const circuits: Circuit[] = []
+
+    let evaluatingPair: JunctionBoxPair | null = null
+    for (let i=0; i < orderedPairs.length; i++) {
+        evaluatingPair = orderedPairs[i]
+        // console.log('Looping:', i, evaluatingPair)
+        if (i === 0) {
+            circuits.push(new Circuit([...evaluatingPair.nodes]))
+            continue
+        }
+
+        let addedToExistingCircuit: number[] = []
+        for(let c=0; c < circuits.length; c++) {
+            if(circuits[c] == undefined) {
+                continue
+            }
+            if (circuits[c].areSameCircuit(evaluatingPair.nodes[0], evaluatingPair.nodes[1])) {
+                addedToExistingCircuit.push(c)
+                break
+            } else if (circuits[c].hasNode(evaluatingPair.nodes[0]) || circuits[c].hasNode(evaluatingPair.nodes[1])) {
+                circuits[c].add(evaluatingPair.nodes[0])
+                circuits[c].add(evaluatingPair.nodes[1])
+                addedToExistingCircuit.push(c)
+            }
+        }
+
+        if (addedToExistingCircuit.length === 0) {
+            circuits.push(new Circuit([...evaluatingPair.nodes]))
+        } else if (addedToExistingCircuit.length === 2) {
+            // Merge Circutis
+            const [first, second] = addedToExistingCircuit
+
+            circuits[first].merge(circuits[second])
+            delete circuits[second]
+        }
+
+        const activeCircuits = circuits.filter(item => item !== undefined)
+        // console.log('Number of Circuits:', activeCircuits)
+        if(activeCircuits.length === 1 && activeCircuits[0].length === nodes.length && i > 10) {
+            break
+        }
+    }
+
+    if (evaluatingPair) {
+        // console.log('Evaluating Pair', evaluatingPair)
+        return evaluatingPair.nodes[0].x * evaluatingPair.nodes[1].x 
+    }
 
     return 0
 }
@@ -125,8 +172,14 @@ export const euclideanDistance = (p: JunctionBox, q: JunctionBox) => {
     return Math.sqrt(Math.pow((p.x - q.x), 2) + Math.pow((p.y - q.y), 2) + Math.pow((p.z - q.z), 2))
 }
 
-export const collateAllDistances = (nodes: JunctionBox[]) => {
-    const distances: {keys: string[], distance: number, nodes: JunctionBox[]}[] = []
+export type JunctionBoxPair = {
+    keys: string[]
+    distance: number
+    nodes: JunctionBox[]
+}
+
+export const collateAllDistances = (nodes: JunctionBox[]): JunctionBoxPair[] => {
+    const distances: JunctionBoxPair[] = []
     const uniquePairs: { [key: string]: number } = {}
 
     for (const pNode of nodes) {
