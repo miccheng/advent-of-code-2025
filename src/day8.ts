@@ -1,10 +1,12 @@
 export class JunctionBox {
+    public pos: string
     public x: number
     public y: number
     public z: number
 
-    constructor(coords: string) {
+    constructor(pos: string, coords: string) {
         const _coords = coords.split(',')
+        this.pos = pos
         this.x = parseInt(_coords[0])
         this.y = parseInt(_coords[1])
         this.z = parseInt(_coords[2])
@@ -105,8 +107,8 @@ export const solutionPart2 = (input: string) => {
 }
 
 export const parserInput = (input:string): JunctionBox[] => {
-    return input.trim().split("\n").map(line => {
-        return new JunctionBox(line)
+    return input.trim().split("\n").map((line, index) => {
+        return new JunctionBox(`${index}`, line)
     }) as JunctionBox[]
 }
 
