@@ -1,3 +1,8 @@
+export type Tile = {
+    col: number
+    row: number
+}
+
 class TileCorners {
     keys: string[] = []
     tiles: Tile[] = []
@@ -33,7 +38,7 @@ export const solutionPart1 = (input: string) => {
                 continue
             }
 
-            cornerCombo.totalTiles = calculateTiles(p, q)
+            cornerCombo.totalTiles = calculateTiles(p, q).total
             uniqueTiles[cornerCombo.keys[0]] = cornerCombo
         }
     }
@@ -44,21 +49,83 @@ export const solutionPart1 = (input: string) => {
 export const solutionPart2 = (input: string) => {
     const data = parserInput(input)
 
+    const width = [...data].sort((a, b) => b.col - a.col)[0].col
+    const height = [...data].sort((a, b) => b.row - a.row)[0].row
+
+    console.log('Width:', width, 'Height:', height)
+
+    const grid: string[][] = []
+    for (let r = 0; r < height+1; r++) {
+        grid[r] = Array(width+1).fill('.')
+    }
+
+    for (let i=0; i < data.length; i++) {
+        const currentTile = data[i]
+        grid[currentTile.row][currentTile.col] = '#'
+
+        if (i > 0) {
+            const previousTile = data[i-1]
+            drawLine(grid, previousTile, currentTile)
+        }
+    }
+    // Last to first
+    drawLine(grid, data[data.length-1], data[0])
+
+    // Print Grid
+    for (let r = 0; r < grid.length; r++) {
+        console.log(grid[r].join(''))
+    }
+
     return 0
 }
 
-export const calculateTiles = (p: Tile, q: Tile): number => {
-    if (p.col === q.col && p.row === q.row) {
-        return 1
+export const drawLine = (grid: string[][], previousTile: Tile, currentTile: Tile) => {
+    if (previousTile.col === currentTile.col) { // Vertical line
+        if (currentTile.row > previousTile.row) { // Moving up
+            for(let v=previousTile.row+1; v<currentTile.row; v++) {
+                grid[v][currentTile.col] = 'X'
+            }
+        } else if (currentTile.row < previousTile.row) { // Moving Down
+            for(let v=previousTile.row-1; v>currentTile.row; v--) {
+                grid[v][currentTile.col] = 'X'
+            }
+        }
     }
+
+    if (previousTile.row === currentTile.row) { // Horizontal line
+        if (currentTile.col > previousTile.col) { // Moving right
+            for(let h=previousTile.col+1; h<currentTile.col; h++) {
+                grid[currentTile.row][h] = 'X'
+            }
+        } else if (currentTile.col < previousTile.col) { // Moving left
+            for(let h=previousTile.col-1; h>currentTile.col; h--) {
+                grid[currentTile.row][h] = 'X'
+            }
+        }
+    }
+
+    return grid
+}
+
+export const calculateTiles = (p: Tile, q: Tile): { tiles: Tile[], total: number } => {
+    const tiles: Tile[] = []
+
+    if (p.col === q.col && p.row === q.row) {
+        tiles.push(p)
+        return { tiles, total: 1 }
+    }
+
+    const direction: [number, number] = [0, 0] // Vertical (row), Horizontal (col)
 
     let width = 0
     if (p.col === q.col){
         width = 1
     } else if (p.col > q.col){
         width = p.col - q.col + 1
+        direction[1] = -1
     } else {
         width = q.col - p.col + 1
+        direction[1] = 1
     }
 
     let height = 0
@@ -66,16 +133,30 @@ export const calculateTiles = (p: Tile, q: Tile): number => {
         height = 1
     } else if (p.row > q.row){
         height = p.row - q.row + 1
+        direction[0] = -1
     } else {
         height = q.row - p.row + 1
+        direction[0] = 1
     }
 
-    return width * height
-}
+    for(let r=0; r < height; r++) {
+        let row = p.row
+        if (direction[0] === 1) {
+            row = p.row + r
+        } else if (direction[0] === -1) {
+            row = p.row - r
+        }
 
-export type Tile = {
-    col: number
-    row: number
+        for(let c = 0; c < width; c++) {
+            if (direction[1] != -1) {
+                tiles.push({ row: row, col: p.col + c })
+            } else {
+                tiles.push({ row: row, col: p.col - c })
+            }
+        }
+    }
+
+    return { tiles, total: width * height }
 }
 
 export const parserInput = (input:string): Tile[] => {
